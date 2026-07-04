@@ -1,57 +1,60 @@
-import { Composition, staticFile } from "remotion";
-import { Scene, myCompSchema } from "./Scene";
-import { getMediaMetadata } from "./helpers/get-media-metadata";
+import React from "react";
+import { Composition, CalculateMetadataFunction } from "remotion";
+import { z } from "zod";
 
-// Welcome to the Remotion Three Starter Kit!
-// Two compositions have been created, showing how to use
-// the `ThreeCanvas` component and the `useVideoTexture` hook.
+// Webpack require.context type declaration
+declare const require: {
+  context: (
+    directory: string,
+    useSubdirectories: boolean,
+    regExp: RegExp
+  ) => {
+    keys: () => string[];
+    (id: string): unknown;
+  };
+};
 
-// You can play around with the example or delete everything inside the canvas.
+// Scan the current directory recursively for files ending with Scene.tsx
+const context = require.context("./", true, /Scene\.tsx$/);
 
-// Remotion Docs:
-// https://remotion.dev/docs
+interface SceneModule {
+  composition?: {
+    id: string;
+    component: React.ComponentType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+    width: number;
+    height: number;
+    fps: number;
+    durationInFrames: number;
+    schema?: z.ZodTypeAny;
+    defaultProps?: Record<string, unknown>;
+    calculateMetadata?: CalculateMetadataFunction<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+  };
+}
 
-// @remotion/three Docs:
-// https://remotion.dev/docs/three
-
-// React Three Fiber Docs:
-// https://docs.pmnd.rs/react-three-fiber/getting-started/introduction
+const scenes = context.keys()
+  .map((key) => {
+    const module = context(key) as SceneModule;
+    return module.composition;
+  })
+  .filter((comp): comp is Exclude<typeof comp, undefined> => !!comp);
 
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      <Composition
-        id="Scene"
-        component={Scene}
-        fps={30}
-        durationInFrames={300}
-        width={1280}
-        height={720}
-        schema={myCompSchema}
-        defaultProps={{
-          deviceType: "phone",
-          phoneColor: "rgba(110, 152, 191, 0.00)" as const,
-          baseScale: 1,
-          mediaMetadata: null,
-          videoSrc: null,
-        }}
-        calculateMetadata={async ({ props }) => {
-          const videoSrc =
-            props.deviceType === "phone"
-              ? staticFile("phone.mp4")
-              : staticFile("tablet.mp4");
-
-          const mediaMetadata = await getMediaMetadata(videoSrc);
-
-          return {
-            props: {
-              ...props,
-              mediaMetadata,
-              videoSrc,
-            },
-          };
-        }}
-      />
+      {scenes.map((config) => (
+        <Composition
+          key={config.id}
+          id={config.id}
+          component={config.component}
+          fps={config.fps}
+          durationInFrames={config.durationInFrames}
+          width={config.width}
+          height={config.height}
+          schema={config.schema}
+          defaultProps={config.defaultProps}
+          calculateMetadata={config.calculateMetadata}
+        />
+      ))}
     </>
   );
 };

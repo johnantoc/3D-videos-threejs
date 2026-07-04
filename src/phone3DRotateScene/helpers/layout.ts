@@ -1,7 +1,7 @@
 import { Vector3 } from "@react-three/fiber";
 
 // The distance from which the camera is pointing to the phone.
-export const CAMERA_DISTANCE = 2.5;
+export const CAMERA_DISTANCE = 1.5;
 
 // A small number to avoid z-index flickering
 export const Z_FLICKER_PREVENTION = 0.001;

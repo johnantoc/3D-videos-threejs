@@ -1,5 +1,5 @@
 import React, { JSX, useMemo } from "react";
-import { roundedRect } from "./helpers/rounded-rectangle";
+import { roundedRect } from "../helpers/rounded-rectangle";
 
 type Props = {
   readonly width: number;

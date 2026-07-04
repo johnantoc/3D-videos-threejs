@@ -1,11 +1,11 @@
 import { ThreeCanvas } from "@remotion/three";
 import { zColor } from "@remotion/zod-types";
 import React, { useMemo } from "react";
-import { AbsoluteFill, useVideoConfig } from "remotion";
+import { AbsoluteFill, useVideoConfig, staticFile, CalculateMetadataFunction } from "remotion";
 import { z } from "zod";
-import { MediabunnyMetadata } from "./helpers/get-media-metadata";
+import { MediabunnyMetadata, getMediaMetadata } from "./helpers/get-media-metadata";
 import { getPhoneLayout } from "./helpers/layout";
-import { Phone } from "./Phone";
+import { Phone } from "./components/Phone";
 
 const container: React.CSSProperties = {
   backgroundColor: "white",
@@ -18,7 +18,7 @@ export const myCompSchema = z.object({
 
 type MyCompSchemaType = z.infer<typeof myCompSchema>;
 
-export const Scene: React.FC<
+export const Phone3DRotateScene: React.FC<
   {
     readonly baseScale: number;
     mediaMetadata: MediabunnyMetadata | null;
@@ -58,4 +58,41 @@ export const Scene: React.FC<
       </ThreeCanvas>
     </AbsoluteFill>
   );
+};
+
+type Props = React.ComponentProps<typeof Phone3DRotateScene>;
+
+const calculateMetadata: CalculateMetadataFunction<Props> = async ({ props }) => {
+  const videoSrc =
+    props.deviceType === "phone"
+      ? staticFile("phone.mp4")
+      : staticFile("tablet.mp4");
+
+  const mediaMetadata = await getMediaMetadata(videoSrc);
+
+  return {
+    props: {
+      ...props,
+      mediaMetadata,
+      videoSrc,
+    },
+  };
+};
+
+export const composition = {
+  id: "phone3DRotateScene",
+  component: Phone3DRotateScene,
+  fps: 30,
+  durationInFrames: 300,
+  width: 1280,
+  height: 720,
+  schema: myCompSchema,
+  defaultProps: {
+    deviceType: "tablet" as const,
+    phoneColor: "rgba(110, 152, 191, 0.00)",
+    baseScale: 1,
+    mediaMetadata: null,
+    videoSrc: null,
+  },
+  calculateMetadata,
 };
