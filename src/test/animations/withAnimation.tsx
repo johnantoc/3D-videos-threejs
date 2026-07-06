@@ -64,7 +64,7 @@ export default function withAnimation<P extends object>(
         // The start position of the phone is set to 4 "units"
         const translateYEnter = interpolate(entranceAnimation, [0, 1], [-4, 0]);
         const translateYExit = interpolate(exitAnimation, [0, 1], [0, 4]);
-        const translateY = translateYEnter + translateYExit;
+        const translateY = translateYEnter - translateYExit;
 
         return (
             <group scale={scale}
