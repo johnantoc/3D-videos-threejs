@@ -6,7 +6,7 @@ import * as THREE from 'three';
 
 export function Particles({ count = 150 }) {
   const frame = useCurrentFrame();
-  
+
   // Generate random positions once deterministically
   const positions = React.useMemo(() => {
     const pos = new Float32Array(count * 3);
@@ -87,19 +87,19 @@ export function RotatingLogo() {
       {/* Front Face of the logo card */}
       <mesh position={[0, 0, 0.052]}>
         <planeGeometry args={[3.5, 3.5]} />
-        <meshStandardMaterial 
-          map={texture} 
+        <meshStandardMaterial
+          map={texture}
           roughness={0.15}
           metalness={0.2}
-          side={THREE.DoubleSide} 
+          side={THREE.DoubleSide}
         />
       </mesh>
 
       {/* Back Face of the logo card (mirrored so it reads correctly from behind) */}
       <mesh position={[0, 0, -0.052]} rotation={[0, Math.PI, 0]}>
         <planeGeometry args={[3.5, 3.5]} />
-        <meshStandardMaterial 
-          map={texture} 
+        <meshStandardMaterial
+          map={texture}
           roughness={0.15}
           metalness={0.2}
           side={THREE.DoubleSide}
@@ -109,8 +109,8 @@ export function RotatingLogo() {
       {/* Card Border / Inner Core (Bright cyan chrome metal) */}
       <mesh>
         <boxGeometry args={[3.52, 3.52, 0.1]} />
-        <meshStandardMaterial 
-          color="#00d2ff" 
+        <meshStandardMaterial
+          color="#00d2ff"
           roughness={0.05}
           metalness={0.95}
           emissive="#004466"
@@ -121,8 +121,8 @@ export function RotatingLogo() {
       {/* Glowing neon outer torus ring */}
       <mesh rotation={[0, 0, frame * 0.008]}>
         <torusGeometry args={[2.8, 0.06, 16, 80]} />
-        <meshStandardMaterial 
-          color="#00f0ff" 
+        <meshStandardMaterial
+          color="#00f0ff"
           roughness={0.1}
           metalness={0.9}
           emissive="#00f0ff"
@@ -130,16 +130,6 @@ export function RotatingLogo() {
         />
       </mesh>
 
-      {/* Outer spinning square wireframe frame */}
-      <mesh rotation={[0, 0, -frame * 0.012]}>
-        <boxGeometry args={[4.4, 4.4, 0.05]} />
-        <meshStandardMaterial 
-          color="#005f73" 
-          wireframe
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
     </group>
   );
 }

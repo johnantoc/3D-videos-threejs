@@ -41,6 +41,14 @@ export default function withAnimation<P extends object>(
             },
         });
 
+        const exitAnimation = spring({
+            frame: frame - durationInFrames / 2,
+            fps,
+            config: { damping: 12 },
+        });
+
+        const scale = entranceAnimation - exitAnimation;
+
         // Calculate the entrance rotation,
         // doing one full spin
         const entranceRotation = interpolate(
@@ -54,10 +62,12 @@ export default function withAnimation<P extends object>(
 
         // Calculating the translation of the phone at the beginning.
         // The start position of the phone is set to 4 "units"
-        const translateY = interpolate(entranceAnimation, [0, 1], [-4, 0]);
+        const translateYEnter = interpolate(entranceAnimation, [0, 1], [-4, 0]);
+        const translateYExit = interpolate(exitAnimation, [0, 1], [0, 4]);
+        const translateY = translateYEnter + translateYExit;
 
         return (
-            <group scale={entranceAnimation}
+            <group scale={scale}
                 rotation={[0, rotateY, 0]}
                 position={[0, translateY, 0]}>
                 <WrappedComponent {...props} />
