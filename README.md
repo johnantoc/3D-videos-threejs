@@ -1,4 +1,4 @@
-# Remotion + React Three Fiber Templatees for my Youtube video animations.
+# Remotion + React Three Fiber Templates for my Youtube video animations.
 
 <p align="center">
     <img src="demo.gif" style="border-radius: 5px">
