@@ -2,13 +2,17 @@ import React from "react";
 import { z } from "zod";
 import { zColor } from "@remotion/zod-types";
 import { AbsoluteFill } from "remotion";
-import { TextGlitch } from "../common/textAnimations/TextGlitch";
-import { Bokeh } from "../common/backgrounds/Bokeh";
-import { Perceptron } from "./components/Perceptron";
+import TitleSequence from "./TitleSequence";
 
 const container: React.CSSProperties = {
   backgroundColor: "transparent",
 };
+
+//video configuration
+const fps = 30;
+const durationInFrames = 10 * fps; // 6 minutes at 30 fps
+const width = 1920;
+const height = 1080;
 
 export const ForgottenNeuronSchema = z.object({
   textGlitch: z.object({
@@ -45,25 +49,19 @@ export const ForgottenNeuronScene: React.FC<{
     lineCap: "butt" | "round" | "square";
   };
 }> = ({
-  textGlitch: { text, startDelay: textGlitchStartDelay, textAlign, bgColor },
-  bokeh: { startDelay: bokehStartDelay },
+  textGlitch,
+  bokeh,
   neuron: { bgColor: neuronBgColor, lineColor, lineWidth, lineCap },
 }) => {
   return (
     <AbsoluteFill style={container}>
-      <Bokeh startDelay={bokehStartDelay} />
-      <TextGlitch
-        text={text}
-        startDelay={textGlitchStartDelay}
-        textAlign={textAlign}
-        bgColor={bgColor}
-      />
-      <Perceptron
+      <TitleSequence textGlitch={textGlitch} bokeh={bokeh} />
+      {/* <Perceptron
         bgColor={neuronBgColor}
         lineColor={lineColor}
         lineWidth={lineWidth}
         lineCap={lineCap}
-      />
+      /> */}
     </AbsoluteFill>
   );
 };
@@ -71,10 +69,10 @@ export const ForgottenNeuronScene: React.FC<{
 export const composition = {
   id: "forgottenNeuron",
   component: ForgottenNeuronScene,
-  fps: 30,
-  durationInFrames: 150,
-  width: 1920,
-  height: 1080,
+  fps: fps,
+  durationInFrames: durationInFrames,
+  width: width,
+  height: height,
   schema: ForgottenNeuronSchema,
   defaultProps: {
     textGlitch: {

@@ -10,11 +10,13 @@ export const TextGlitch = ({
   startDelay = 0,
   bgColor = C.black,
   textAlign = "center",
+  glitchDuration = 5, // in seconds
 }: {
   text?: string;
   startDelay?: number;
   bgColor?: string;
   textAlign?: "left" | "center" | "right";
+  glitchDuration?: number;
 }) => {
   const frame = useCurrentFrame();
 
@@ -24,6 +26,14 @@ export const TextGlitch = ({
     [0, 1],
     EASE.out,
   );
+
+  const exitProgress = lerp(
+    frame,
+    [glitchDuration - 10, glitchDuration],
+    [1, 0],
+    EASE.out,
+  );
+
   const glitchActive =
     frame > startDelay + 25 && random(`glitch-${frame}`) < 0.15;
 
@@ -32,7 +42,14 @@ export const TextGlitch = ({
   const skew = glitchActive ? (random(`gs-${frame}`) - 0.5) * 8 : 0;
 
   return (
-    <AbsoluteFill style={{ background: bgColor }}>
+    <AbsoluteFill
+      style={{
+        transform: `
+            scale(${exitProgress})
+          `,
+        background: bgColor,
+      }}
+    >
       <div
         style={{
           position: "absolute",
