@@ -1,4 +1,4 @@
-import { Sequence, useVideoConfig } from "remotion";
+import { Series, useVideoConfig } from "remotion";
 import { Bokeh } from "../common/backgrounds/Bokeh";
 import { TextGlitch } from "../common/textAnimations/TextGlitch";
 import { EffectVHS } from "../common/effects/EffectVHS";
@@ -11,12 +11,11 @@ const TitleSequence = ({
   bokeh: any;
 }) => {
   const { fps } = useVideoConfig();
-  const glitchStartFrame = textGlitch.startDelay * fps;
   const glitchDuration = 5 * fps; // 5 seconds duration for the glitch effect
 
   return (
-    <>
-      <Sequence from={glitchStartFrame} durationInFrames={glitchDuration}>
+    <Series>
+      <Series.Sequence durationInFrames={glitchDuration}>
         <Bokeh startDelay={startDelay} />
         <TextGlitch
           text={textGlitch.text}
@@ -25,14 +24,14 @@ const TitleSequence = ({
           bgColor={textGlitch.bgColor}
           glitchDuration={glitchDuration}
         />
-      </Sequence>
-      <Sequence from={glitchDuration} durationInFrames={glitchDuration}>
+      </Series.Sequence>
+      <Series.Sequence durationInFrames={glitchDuration}>
         <EffectVHS
           startDuration={glitchDuration}
           text="A journey through the depths of memory and cognition."
         />
-      </Sequence>
-    </>
+      </Series.Sequence>
+    </Series>
   );
 };
 
