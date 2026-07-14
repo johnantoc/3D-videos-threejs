@@ -4,7 +4,6 @@ import {
   useVideoConfig,
   interpolate,
   useCurrentFrame,
-  Series,
 } from "remotion";
 import {
   makeTransform,
@@ -21,8 +20,6 @@ const HookSequence: React.FC<{
   const frame = useCurrentFrame();
   const scrollZ = (frame - startDelay) * 2;
   const hookDuration = 5 * fps; // 5 seconds duration
-  const numOfSeriesComponent = 3;
-  const hookTotalDuration = hookDuration * numOfSeriesComponent; // no of series components
   const interpolateInput = [startDelay, startDelay + hookDuration - 4 * fps];
   const interpolateScaleInput = [
     startDelay + hookDuration - 4 * fps,
@@ -47,21 +44,19 @@ const HookSequence: React.FC<{
   };
 
   return (
-    <Series from={startDelay}>
-      <Series.Sequence durationInFrames={hookTotalDuration}>
-        <BackgroundPerspectiveGrid startDelay={startDelay} />
-        <Img
-          src={staticFile(`/retro-computer.png`)}
-          style={{
-            ...animatedStyles,
-            width: "35%",
-            height: "35%",
-            position: "absolute",
-            top: "30%",
-          }}
-        />
-      </Series.Sequence>
-    </Series>
+    <>
+      <BackgroundPerspectiveGrid startDelay={startDelay} />
+      <Img
+        src={staticFile(`/retro-computer.png`)}
+        style={{
+          ...animatedStyles,
+          width: "35%",
+          height: "35%",
+          position: "absolute",
+          top: "30%",
+        }}
+      />
+    </>
   );
 };
 

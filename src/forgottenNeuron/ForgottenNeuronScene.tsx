@@ -4,6 +4,7 @@ import { AbsoluteFill } from "remotion";
 import { springTiming, TransitionSeries } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import TitleSequence from "./TitleSequence";
+import SubTitleSequence from "./SubTitleSequence";
 import HookSequence from "./HookSequence";
 
 const container: React.CSSProperties = {
@@ -19,13 +20,12 @@ const height = 1080;
 export const ForgottenNeuronSchema = z.object({});
 
 export const ForgottenNeuronScene: React.FC<{}> = ({}) => {
-  const titleDuration = 4 * fps * 2;
-  const hookDuration = 5 * fps * 1;
+  const defaultDuration = 5 * fps;
 
   return (
     <AbsoluteFill style={container}>
       <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={titleDuration}>
+        <TransitionSeries.Sequence durationInFrames={defaultDuration}>
           {/** Title */}
           <TitleSequence />
         </TransitionSeries.Sequence>
@@ -36,7 +36,18 @@ export const ForgottenNeuronScene: React.FC<{}> = ({}) => {
             durationInFrames: fps / 2,
           })}
         />
-        <TransitionSeries.Sequence durationInFrames={hookDuration}>
+        <TransitionSeries.Sequence durationInFrames={defaultDuration}>
+          {/** Sub Tilte */}
+          <SubTitleSequence />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={springTiming({
+            config: { damping: 200 },
+            durationInFrames: fps / 2,
+          })}
+        />
+        <TransitionSeries.Sequence durationInFrames={defaultDuration}>
           {/** Hook */}
           <HookSequence />
         </TransitionSeries.Sequence>
