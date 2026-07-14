@@ -1,6 +1,8 @@
 import React from "react";
 import { z } from "zod";
 import { AbsoluteFill } from "remotion";
+import { springTiming, TransitionSeries } from "@remotion/transitions";
+import { fade } from "@remotion/transitions/fade";
 import TitleSequence from "./TitleSequence";
 import HookSequence from "./HookSequence";
 
@@ -17,14 +19,28 @@ const height = 1080;
 export const ForgottenNeuronSchema = z.object({});
 
 export const ForgottenNeuronScene: React.FC<{}> = ({}) => {
-  const titleDuration = 5 * fps * 2;
+  const titleDuration = 4 * fps * 2;
+  const hookDuration = 5 * fps * 1;
 
   return (
     <AbsoluteFill style={container}>
-      {/** Title */}
-      <TitleSequence />
-      {/** Hook */}
-      <HookSequence startDelay={titleDuration} />
+      <TransitionSeries>
+        <TransitionSeries.Sequence durationInFrames={titleDuration}>
+          {/** Title */}
+          <TitleSequence />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={springTiming({
+            config: { damping: 200 },
+            durationInFrames: fps / 2,
+          })}
+        />
+        <TransitionSeries.Sequence durationInFrames={hookDuration}>
+          {/** Hook */}
+          <HookSequence />
+        </TransitionSeries.Sequence>
+      </TransitionSeries>
     </AbsoluteFill>
   );
 };

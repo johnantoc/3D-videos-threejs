@@ -1,5 +1,6 @@
-import { Series, useVideoConfig } from "remotion";
-
+import { useVideoConfig } from "remotion";
+import { springTiming, TransitionSeries } from "@remotion/transitions";
+import { fade } from "@remotion/transitions/fade";
 import { Bokeh } from "../common/backgrounds/Bokeh";
 import { TextGlitch } from "../common/textAnimations/TextGlitch";
 import { EffectVHS } from "../common/effects/EffectVHS";
@@ -14,8 +15,6 @@ type textGlitchSchema = {
 const TitleSequence = () => {
   const { fps } = useVideoConfig();
   const titleDuration = 5 * fps; // 5 seconds duration for the glitch effect
-  const numOfSeriesComponent = 2;
-  const seriesTotalDuration = titleDuration * numOfSeriesComponent; // no of series components
 
   const textGlitch: textGlitchSchema = {
     text: "THE FORGOTTEN NEURON",
@@ -25,8 +24,8 @@ const TitleSequence = () => {
   };
 
   return (
-    <Series durationInFrames={seriesTotalDuration}>
-      <Series.Sequence durationInFrames={titleDuration}>
+    <TransitionSeries>
+      <TransitionSeries.Sequence durationInFrames={titleDuration}>
         <Bokeh />
         <TextGlitch
           text={textGlitch.text}
@@ -35,14 +34,21 @@ const TitleSequence = () => {
           bgColor={textGlitch.bgColor}
           glitchDuration={titleDuration}
         />
-      </Series.Sequence>
-      <Series.Sequence durationInFrames={titleDuration}>
+      </TransitionSeries.Sequence>
+      <TransitionSeries.Transition
+        presentation={fade()}
+        timing={springTiming({
+          config: { damping: 200 },
+          durationInFrames: fps / 2,
+        })}
+      />
+      <TransitionSeries.Sequence durationInFrames={titleDuration}>
         <EffectVHS
           startDuration={titleDuration}
           text="A journey through the depths of memory and cognition."
         />
-      </Series.Sequence>
-    </Series>
+      </TransitionSeries.Sequence>
+    </TransitionSeries>
   );
 };
 
