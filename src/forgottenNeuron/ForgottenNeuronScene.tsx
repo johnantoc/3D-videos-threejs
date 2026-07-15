@@ -14,7 +14,7 @@ const container: React.CSSProperties = {
 
 //video configuration
 const fps = 30;
-const durationInFrames = 50 * fps; // 50 seconds at 30 fps
+const durationInFrames = 29 * fps; // 50 seconds at 30 fps
 const width = 1920;
 const height = 1080;
 
