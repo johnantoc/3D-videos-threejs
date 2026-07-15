@@ -6,6 +6,8 @@ import { fade } from "@remotion/transitions/fade";
 import TitleSequence from "./TitleSequence";
 import SubTitleSequence from "./SubTitleSequence";
 import HookSequence from "./HookSequence";
+import InputProcessingSequence from "./InputProcessingSequence";
+import NeuralNetworkFormationSequence from "./NeuralNetworkFormationSequence";
 
 const container: React.CSSProperties = {
   backgroundColor: "transparent",
@@ -13,7 +15,7 @@ const container: React.CSSProperties = {
 
 //video configuration
 const fps = 30;
-const durationInFrames = 20 * fps; // 6 minutes at 30 fps
+const durationInFrames = 50 * fps; // 50 seconds at 30 fps
 const width = 1920;
 const height = 1080;
 
@@ -21,6 +23,7 @@ export const ForgottenNeuronSchema = z.object({});
 
 export const ForgottenNeuronScene: React.FC<{}> = ({}) => {
   const defaultDuration = 5 * fps;
+  const extendedDuration = 20 * fps;
 
   return (
     <AbsoluteFill style={container}>
@@ -47,9 +50,21 @@ export const ForgottenNeuronScene: React.FC<{}> = ({}) => {
             durationInFrames: fps / 2,
           })}
         />
-        <TransitionSeries.Sequence durationInFrames={defaultDuration}>
-          {/** Hook */}
+        <TransitionSeries.Sequence durationInFrames={extendedDuration}>
+          {/** Hook + Input Processing (Parallel) */}
           <HookSequence />
+          <InputProcessingSequence startDelay={30} />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          presentation={fade()}
+          timing={springTiming({
+            config: { damping: 200 },
+            durationInFrames: fps / 2,
+          })}
+        />
+        <TransitionSeries.Sequence durationInFrames={extendedDuration}>
+          {/** Neural Network Formation - Idea 3 */}
+          {/* <NeuralNetworkFormationSequence /> */}
         </TransitionSeries.Sequence>
       </TransitionSeries>
     </AbsoluteFill>
