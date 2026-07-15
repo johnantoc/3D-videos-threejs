@@ -7,7 +7,6 @@ import TitleSequence from "./TitleSequence";
 import SubTitleSequence from "./SubTitleSequence";
 import HookSequence from "./HookSequence";
 import InputProcessingSequence from "./InputProcessingSequence";
-import NeuralNetworkFormationSequence from "./NeuralNetworkFormationSequence";
 
 const container: React.CSSProperties = {
   backgroundColor: "transparent",
@@ -62,10 +61,6 @@ export const ForgottenNeuronScene: React.FC<{}> = ({}) => {
             durationInFrames: fps / 2,
           })}
         />
-        <TransitionSeries.Sequence durationInFrames={extendedDuration}>
-          {/** Neural Network Formation - Idea 3 */}
-          {/* <NeuralNetworkFormationSequence /> */}
-        </TransitionSeries.Sequence>
       </TransitionSeries>
     </AbsoluteFill>
   );
