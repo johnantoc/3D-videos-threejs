@@ -4,14 +4,20 @@ import { useCurrentFrame, interpolate, Easing, AbsoluteFill } from "remotion";
 export const ConclusionText: React.FC = () => {
   const frame = useCurrentFrame();
 
-  // Text appears at frame 2400 (40s) after planet fades
-  const textOpacity = interpolate(frame, [2400, 2550], [0, 1], {
+  // Only show after planet fades (frame 2100+)
+  const containerOpacity = interpolate(frame, [2100, 2200], [0, 1], {
+    extrapolateRight: "clamp",
+    extrapolateLeft: "clamp",
+  });
+
+  // Text appears at frame 2200 (36.7s)
+  const textOpacity = interpolate(frame, [2200, 2400], [0, 1], {
     extrapolateRight: "clamp",
     extrapolateLeft: "clamp",
     easing: Easing.bezier(0.16, 1, 0.3, 1),
   });
 
-  const textY = interpolate(frame, [2400, 2550], [40, 0], {
+  const textY = interpolate(frame, [2200, 2400], [40, 0], {
     extrapolateRight: "clamp",
     extrapolateLeft: "clamp",
     easing: Easing.bezier(0.16, 1, 0.3, 1),
@@ -23,6 +29,8 @@ export const ConclusionText: React.FC = () => {
     extrapolateLeft: "clamp",
   });
 
+  if (containerOpacity === 0) return null;
+
   return (
     <AbsoluteFill
       style={{
@@ -30,7 +38,7 @@ export const ConclusionText: React.FC = () => {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#000",
-        opacity: fadeOut,
+        opacity: containerOpacity * fadeOut,
       }}
     >
       <div
@@ -40,7 +48,6 @@ export const ConclusionText: React.FC = () => {
           opacity: textOpacity,
         }}
       >
-        {/* Planet name - large and prominent */}
         <div
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -55,7 +62,6 @@ export const ConclusionText: React.FC = () => {
           LHS 1140b
         </div>
 
-        {/* Distance */}
         <div
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
@@ -69,7 +75,6 @@ export const ConclusionText: React.FC = () => {
           48 light-years from Earth
         </div>
 
-        {/* Divider line */}
         <div
           style={{
             width: 200,
@@ -79,7 +84,6 @@ export const ConclusionText: React.FC = () => {
           }}
         />
 
-        {/* Description */}
         <div
           style={{
             fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',

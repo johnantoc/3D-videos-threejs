@@ -5,12 +5,12 @@ export const StarPush: React.FC = () => {
   const frame = useCurrentFrame();
 
   const stars = React.useMemo(() => {
-    return Array.from({ length: 300 }, (_, i) => ({
+    return Array.from({ length: 200 }, (_, i) => ({
       x: random(`star-x-${i}`) * 3840,
       y: random(`star-y-${i}`) * 2160,
-      size: random(`star-size-${i}`) * 3 + 1,
-      brightness: random(`star-bright-${i}`) * 0.5 + 0.5,
-      depth: random(`star-depth-${i}`) * 0.8 + 0.2,
+      size: random(`star-size-${i}`) * 6 + 2,
+      brightness: random(`star-bright-${i}`) * 0.4 + 0.6,
+      depth: random(`star-depth-${i}`) * 0.6 + 0.4,
     }));
   }, []);
 
@@ -22,7 +22,7 @@ export const StarPush: React.FC = () => {
   return (
     <AbsoluteFill style={{ backgroundColor: "#050510" }}>
       {stars.map((star, i) => {
-        const depthScale = 1 + star.depth * pushProgress * 2;
+        const depthScale = 1 + star.depth * pushProgress * 1.5;
         const centerX = 1920;
         const centerY = 1080;
         const dx = (star.x - centerX) * (depthScale - 1);
@@ -30,12 +30,6 @@ export const StarPush: React.FC = () => {
         const x = star.x - dx;
         const y = star.y - dy;
         const size = star.size * depthScale;
-        const opacity = interpolate(
-          pushProgress,
-          [0, 0.3, 0.7, 1],
-          [star.brightness, star.brightness, star.brightness * 0.6, star.brightness * 0.3],
-          { extrapolateRight: "clamp", extrapolateLeft: "clamp" }
-        );
 
         return (
           <div
@@ -47,8 +41,8 @@ export const StarPush: React.FC = () => {
               width: size,
               height: size,
               borderRadius: "50%",
-              backgroundColor: `rgba(255, 255, 255, ${opacity})`,
-              boxShadow: size > 2 ? `0 0 ${size * 2}px rgba(255, 255, 255, ${opacity * 0.5})` : "none",
+              backgroundColor: `rgba(255, 255, 255, ${star.brightness})`,
+              boxShadow: `0 0 ${size * 3}px rgba(255, 255, 255, ${star.brightness * 0.6})`,
             }}
           />
         );
